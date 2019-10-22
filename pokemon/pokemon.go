@@ -11,7 +11,7 @@ import (
 
 type NameUrl struct {
 	Name string `json: string`
-	Url  string `json: url`
+	URL  string `json: url`
 }
 
 type AbilityItem struct {
@@ -81,6 +81,10 @@ type PokemonReponse struct {
 	Weight                   int64         `json: weight`
 }
 
+type request struct {
+	Pokemon string `json: "pokemon"`
+}
+
 // GetPokemon formats the raw response from the PokeAPI
 // and returns a Pokemons response struct
 func GetPokemon(body []byte) (*PokemonReponse, error) {
@@ -95,12 +99,19 @@ func GetPokemon(body []byte) (*PokemonReponse, error) {
 // Finder Takes a pokemon name and returns data about that
 // given pokemon.
 func Finder(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
+	if r.Method != http.MethodPost {
 		errorhandler.BadRequest(w)
 		return
 	}
-
-	resp, err := http.Get("https://pokeapi.co/api/v2/pokemon/ditto")
+	decoder := json.NewDecoder(r.Body)
+	var t request
+	err := decoder.Decode(&t)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	var url = "https://pokeapi.co/api/v2/pokemon/" + t.Pokemon
+	resp, err := http.Get(url)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

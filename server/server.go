@@ -13,8 +13,7 @@ func Start(port string) {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Hello World from path: %s\n", r.URL.Path)
 	})
-
-	http.Handle("/pokemon", http.HandlerFunc(pokemon.Finder))
+	http.Handle("/pokemon/{pokemon}", http.HandlerFunc(pokemon.Finder))
 
 	http.ListenAndServe(":"+port, nil)
 }
