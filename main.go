@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/lukebrobbs/pokemonServer/server"
+	"github.com/lukebrobbs/pokemon-go/server"
 )
 
 func main() {
